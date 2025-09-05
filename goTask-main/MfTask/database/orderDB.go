@@ -77,6 +77,20 @@ func (f *OrderDB) UpdateOrderEvent(OrderEve *model.ORDER, msg *mesagging.Messagi
 	OrderEve.Confirmed_at = time.Now().Unix()
 	msg.ChMessaging <- OrderEve.ToBytes()
 
+	// go func() {
+
+	// 	for msg := range consumer.ConsumeMsg {
+	// 		obj := new(model.ORDER)
+	// 		err := json.Unmarshal(msg.Value, obj)
+	// 		if err != nil {
+	// 			return
+	// 		}
+	// 		fmt.Printf("inside update ordervent db\n")
+	// 		fmt.Printf("this is orders placed -->", obj)
+	// 	}
+
+	// }()
+
 	// also update the struct in memory so caller sees latest status
 	// OrderEve.Status = status
 	return nil

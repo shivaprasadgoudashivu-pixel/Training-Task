@@ -2,19 +2,27 @@ package consumer
 
 import (
 	"context"
+	"encoding/json"
 	"flag"
 	"fmt"
+	"keycloak-demo/database"
+	"keycloak-demo/model"
 	"time"
 
 	"github.com/twmb/franz-go/pkg/kgo"
+	"gorm.io/gorm"
 )
 
 var (
 	Topic         string
 	ConsumerGroup string
+	// ConsumeMsg    = make(chan *kgo.Record, 30)
+	// repo database.HOLDINGSDB
 )
 
-func ConsumeTopic() {
+func ConsumeTopic(db *gorm.DB) {
+
+	repo := database.NewHoldingsDB(db)
 
 	flag.StringVar(&Topic, "topic", "ordersv1", "ordersv1")
 	// flag.StringVar(&ConsumerGroup, "cg", " ", "--cg=demo-consumer-group")
@@ -49,8 +57,26 @@ func ConsumeTopic() {
 		iter := fetches.RecordIter()
 		for !iter.Done() {
 			record := iter.Next()
+			// ConsumeMsg <- record
+			obj := new(model.ORDER)
+			err := json.Unmarshal(record.Value, obj)
+			if err != nil {
+				return
+			}
+
+			if obj.Status == "confirmed" {
+
+				fmt.Println("Here its adding the holdings")
+				holdObj := new(model.HOLDINGS)
+				holdObj.SchemeCode = obj.Scheme_code
+				holdObj.UserId = obj.UserId
+
+				repo.AddHoldings(holdObj)
+			}
+
 			fmt.Println("Partition-->", record.Partition, "Topic-->", record.Topic, string(record.Value), "from an iterator!")
 		}
 
 	}
+
 }

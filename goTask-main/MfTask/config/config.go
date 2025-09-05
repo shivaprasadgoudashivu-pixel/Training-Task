@@ -22,7 +22,7 @@ func mustGetEnv(name, def string) string {
 
 func Load() Config {
 	return Config{
-		KeycloakURL:  mustGetEnv("KEYCLOAK_URL", "http://localhost:8080"),
+		KeycloakURL:  mustGetEnv("KEYCLOAK_URL", "keycloak:8084"),
 		Realm:        mustGetEnv("KEYCLOAK_REALM", "myrealm"),
 		ClientID:     mustGetEnv("KEYCLOAK_CLIENT_ID", "myclient"),
 		ClientSecret: mustGetEnv("KEYCLOAK_CLIENT_SECRET", ""),

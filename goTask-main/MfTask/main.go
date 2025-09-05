@@ -75,7 +75,6 @@ func main() {
 	// }
 
 	rdb := redis.ConnRedis()
-	
 
 	Init(db)
 	go redis.PubNav(rdb, wg)
@@ -84,7 +83,7 @@ func main() {
 
 	msgOrderPlaced := mesagging.NewMessaging("ordersv1", strings.Split(SEEDS, ","))
 	go msgOrderPlaced.ProduceRecords()
-	go consumer.ConsumeTopic()
+	go consumer.ConsumeTopic(db)
 
 	app := fiber.New()
 
@@ -107,5 +106,5 @@ func main() {
 }
 
 func Init(db *gorm.DB) {
-	db.AutoMigrate(&model.ORDER{})
+	db.AutoMigrate(&model.ORDER{}, &model.HOLDINGS{})
 }

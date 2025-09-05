@@ -23,6 +23,7 @@ func NewHoldingsDB(db *gorm.DB) IHoldingsDB {
 
 func (H *HOLDINGSDB) AddHoldings(holdings *model.HOLDINGS) error {
 
+	
 	err := H.DB.Create(holdings)
 	if err != nil {
 		log.Printf("error in adding holdings")
