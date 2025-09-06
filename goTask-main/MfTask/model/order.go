@@ -16,6 +16,7 @@ type ORDER struct {
 	Nav_used     uint16 `json:"nav_used"`
 	Placed_at    int64  `josn:"placed_at" gorm:"timestamptz"`
 	Confirmed_at int64  `json:"confirm_at" gorm:"timestamptz"`
+	Contact_Url  string `json: "contact_url"`
 }
 
 func (oe *ORDER) ToBytes() []byte {

@@ -2,7 +2,9 @@ package database
 
 import (
 	"errors"
+	"fmt"
 	mesagging "keycloak-demo/kafka/messaging"
+	"keycloak-demo/minio"
 	"keycloak-demo/model"
 	"math/rand"
 	"time"
@@ -61,12 +63,17 @@ func (f *OrderDB) UpdateOrderEvent(OrderEve *model.ORDER, msg *mesagging.Messagi
 	} else {
 		status = "cancelled"
 	}
+	url := minio.UploadPDF(OrderEve)
+	OrderEve.Contact_Url = url
+
+	fmt.Printf("url return is :%S", OrderEve.Contact_Url)
 
 	result := f.DB.Model(&model.ORDER{}).
 		Where("id = ?", OrderEve.Id).
 		Updates(map[string]interface{}{
 			"status":       status,
 			"confirmed_at": time.Now().Unix(),
+			"contact_url":  OrderEve.Contact_Url,
 		})
 
 	// result := f.DB.Model(&model.ORDER{}).Where("id = ?", OrderEve.Id).Update("status,confirmed_at", status, time.Now().Unix())

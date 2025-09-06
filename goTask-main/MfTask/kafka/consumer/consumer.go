@@ -72,6 +72,7 @@ func ConsumeTopic(db *gorm.DB) {
 				holdObj.UserId = obj.UserId
 
 				repo.AddHoldings(holdObj)
+
 			}
 
 			fmt.Println("Partition-->", record.Partition, "Topic-->", record.Topic, string(record.Value), "from an iterator!")
