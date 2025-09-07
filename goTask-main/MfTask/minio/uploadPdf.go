@@ -33,7 +33,7 @@ func UploadPDF(order *model.ORDER) string {
 	pdf.Ln(10)
 	pdf.Cell(40, 10, "units : "+strconv.Itoa(order.Units))
 	pdf.Ln(10)
-	pdf.Cell(40, 10, "Amount : "+strconv.Itoa(order.Price))
+	pdf.Cell(40, 10, "Amount : "+strconv.Itoa(order.Amount))
 
 	err := pdf.Output(&buf) // write PDF into buffer
 	if err != nil {

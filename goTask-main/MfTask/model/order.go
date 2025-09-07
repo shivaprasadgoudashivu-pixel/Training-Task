@@ -9,14 +9,15 @@ type ORDER struct {
 	Id           int    `json:"id" gorm:"primaryKey;autoIncrement"`
 	UserId       int    `json:"userId"`
 	Scheme       string `json:sym`
-	Price        int    `json:price`
+	Amount       int    `json:amount`
 	Units        int    `json:units`
 	Status       string `json:status`
 	Scheme_code  string `json:"schemeCode"`
-	Nav_used     uint16 `json:"nav_used"`
+	Nav_used     int    `json:"nav_used"`
 	Placed_at    int64  `josn:"placed_at" gorm:"timestamptz"`
 	Confirmed_at int64  `json:"confirm_at" gorm:"timestamptz"`
 	Contact_Url  string `json: "contact_url"`
+	PlaceFlg     bool   `json:"-" gorm:"-"`
 }
 
 func (oe *ORDER) ToBytes() []byte {

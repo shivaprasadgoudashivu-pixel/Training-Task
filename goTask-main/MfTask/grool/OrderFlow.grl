@@ -1,0 +1,13 @@
+
+rule ORDEREXECUTE "when Price is more than 500 ,you will be allowed to place order ." salience 100{
+
+	when
+	   ORDER.Amount >= 500  && ORDER.PlaceFlg == false
+	then 
+        ORDER.PlaceFlg = true;
+
+
+
+		
+
+}

@@ -16,7 +16,8 @@ RUN apk --no-cache add ca-certificates
 # Create app directory
 WORKDIR /root/
 
-COPY --from=builder /app/app . 
+COPY --from=builder /app/app .
+COPY --from=builder /app/grool/OrderFlow.grl ./grool/OrderFlow.grl
 EXPOSE 8081
 
 ENTRYPOINT [ "./app" ]
