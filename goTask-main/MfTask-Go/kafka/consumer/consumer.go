@@ -25,19 +25,14 @@ func ConsumeTopic(db *gorm.DB) {
 	repo := database.NewHoldingsDB(db)
 
 	flag.StringVar(&Topic, "topic", "ordersv1", "ordersv1")
-	// flag.StringVar(&ConsumerGroup, "cg", " ", "--cg=demo-consumer-group")
 	flag.Parse()
 
 	seeds := []string{"kafka1", "kafka2", "kafka3"}
-	// One client can both produce and consume!
-	// Consuming can either be direct (no consumer group), or through a group. Below, we use a group.
+
 	cl, err := kgo.NewClient(
 		kgo.SeedBrokers(seeds...),
 		kgo.ConsumerGroup(ConsumerGroup),
 		kgo.ConsumeTopics(Topic),
-		//kgo.RequiredAcks(kgo.AllISRAcks()), // or kgo.RequireOneAck(), kgo.RequireNoAck()
-		//kgo.DisableIdempotentWrite()
-		//kgo.RetryTimeout()
 	)
 	if err != nil {
 		panic(err)

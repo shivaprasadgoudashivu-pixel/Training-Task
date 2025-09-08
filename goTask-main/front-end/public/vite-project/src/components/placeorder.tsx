@@ -9,12 +9,12 @@ const StockTradingApp = () => {
 
   const handlePlaceOrder = async () => {
     if (userId <= 0) {
-      setMessage("❌ Please enter valid User ID");
+      setMessage("Please enter valid User ID");
       return;
     }
 
     if (units <= 0) {
-      setMessage("❌ Units must be greater than 0");
+      setMessage("Units must be greater than 0");
       return;
     }
 
@@ -38,7 +38,7 @@ const StockTradingApp = () => {
       const responseData = await response.json();
 
       if (response.ok) {
-        setMessage(`✅ Order placed for ${schemeCode} (User ID: ${userId})`);
+        setMessage(`SuccessFully Order placed for ${schemeCode} (User ID: ${userId})`);
         setUserId(0);
         setSchemeCode("MF1");
         setUnits(1);
@@ -48,11 +48,11 @@ const StockTradingApp = () => {
           responseData.message ||
           responseData.details ||
           "Unknown error occurred";
-        setMessage(`❌ ${errorMsg}`);
+        setMessage(` ${errorMsg}`);
       }
     } catch (error) {
       console.error("Failed to place order:", error);
-      setMessage("❌ Failed to connect to server. Please check your connection.");
+      setMessage(" Failed to connect to server. Please check your connection.");
     } finally {
       setIsLoading(false);
     }
@@ -117,12 +117,19 @@ const StockTradingApp = () => {
             {isLoading ? "Processing..." : "Place Order"}
           </button>
         </div>
-
+          <button
+            onClick={() => {
+              window.location.href = "/orders";
+            }}
+            className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-xl shadow-md transition"
+          >
+            View Orders
+          </button>
         {/* Message */}
         {message && (
           <div
             className={`mt-6 p-4 rounded-xl font-medium text-center shadow-sm ${
-              message.includes("✅")
+              message.includes("SuccessFully")
                 ? "bg-green-100 text-green-700"
                 : "bg-red-100 text-red-700"
             }`}

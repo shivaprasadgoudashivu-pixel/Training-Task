@@ -17,25 +17,7 @@ var ctx = context.Background()
 
 func PubNav(rdb *redis.Client, wg *sync.WaitGroup) {
 	var SCheme_Code = []string{"MF1", "MF2", "MF3"}
-	// wg = new(sync.WaitGroup)
-	// rdb := redis.NewClient(&redis.Options{
-	// 	Addr: "localhost:6379", // or your VM IP if not forwarded
 
-	// 	DialTimeout:  2 * time.Second,
-	// 	ReadTimeout:  1 * time.Second,
-	// 	WriteTimeout: 1 * time.Second,
-	// 	PoolSize:     20,
-	// 	MinIdleConns: 4,
-	// })
-	// defer rdb.Close()
-
-	// if err := rdb.Ping(ctx).Err(); err != nil {
-	// 	log.Fatal(err)
-	// } else {
-	// 	println("Connected")
-	// }
-
-	// wg.Add(1)
 	go func() {
 		for i := 0; i < len(SCheme_Code); i++ {
 			// for {

@@ -74,7 +74,6 @@ func (f *OrderHandler) Place_order(msg *mesagging.Messaging, rdb *redis.Client, 
 			return err
 		}
 
-		// msg.ChMessaging <- order.ToBytes()
 		return c.JSON(order)
 	}
 

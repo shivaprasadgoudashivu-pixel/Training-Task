@@ -34,14 +34,7 @@ func (f *OrderDB) PlaceOrder(order *model.ORDER, msg *mesagging.Messaging) (*mod
 	}
 	msg.ChMessaging <- order.ToBytes()
 	go f.UpdateOrderEvent(order, msg)
-	// go func() {
 
-	// 	for msg := range consumer.ChanConsume {
-	// 		fmt.Printf("here inside the place order consuming data \n")
-	// 		fmt.Print(msg.Value)
-	// 	}
-
-	// }()
 	return order, nil
 }
 
@@ -76,7 +69,6 @@ func (f *OrderDB) UpdateOrderEvent(OrderEve *model.ORDER, msg *mesagging.Messagi
 			"contact_url":  OrderEve.Contact_Url,
 		})
 
-	// result := f.DB.Model(&model.ORDER{}).Where("id = ?", OrderEve.Id).Update("status,confirmed_at", status, time.Now().Unix())
 	if result.Error != nil {
 		return errors.New("unable to update order event: " + result.Error.Error())
 	}
@@ -84,21 +76,5 @@ func (f *OrderDB) UpdateOrderEvent(OrderEve *model.ORDER, msg *mesagging.Messagi
 	OrderEve.Confirmed_at = time.Now().Unix()
 	msg.ChMessaging <- OrderEve.ToBytes()
 
-	// go func() {
-
-	// 	for msg := range consumer.ConsumeMsg {
-	// 		obj := new(model.ORDER)
-	// 		err := json.Unmarshal(msg.Value, obj)
-	// 		if err != nil {
-	// 			return
-	// 		}
-	// 		fmt.Printf("inside update ordervent db\n")
-	// 		fmt.Printf("this is orders placed -->", obj)
-	// 	}
-
-	// }()
-
-	// also update the struct in memory so caller sees latest status
-	// OrderEve.Status = status
 	return nil
 }
