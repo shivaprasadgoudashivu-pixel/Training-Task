@@ -31,7 +31,6 @@ func NewOrderHandler(iOrderDB database.IOrderDB) OrderHandlerInterface {
 func (f *OrderHandler) Place_order(msg *mesagging.Messaging, rdb *redis.Client, ctx context.Context) func(c *fiber.Ctx) error {
 
 	grlEngine, dctx, kb := grool.GrlExecute()
-
 	return func(c *fiber.Ctx) error {
 		order := new(model.ORDER)
 		err := c.BodyParser(order)
@@ -43,7 +42,6 @@ func (f *OrderHandler) Place_order(msg *mesagging.Messaging, rdb *redis.Client, 
 		if err != nil {
 			return err
 		}
-
 		nav, err := rdb.Get(ctx, order.Scheme_code).Result()
 		if err != nil {
 			log.Print(err)
@@ -60,9 +58,9 @@ func (f *OrderHandler) Place_order(msg *mesagging.Messaging, rdb *redis.Client, 
 			panic(err)
 		}
 
-		if !order.PlaceFlg {
+		if !order.UintsFlg {
 			return c.Status(fiber.StatusForbidden).JSON(fiber.Map{
-				"error": "Order not allowed: amount must be >= 500",
+				"error": "units should be >= 10",
 			})
 		}
 

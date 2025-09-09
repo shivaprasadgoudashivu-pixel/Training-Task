@@ -1,5 +1,5 @@
 
-rule ORDEREXECUTE "when Price is more than 500 ,you will be allowed to place order ." salience 100{
+rule ORDEREXECUTE "when Price is more than 500 ,your order will be Approved ." salience 100{
 
 	when
 	   ORDER.Amount >= 500  && ORDER.PlaceFlg == false
@@ -7,7 +7,14 @@ rule ORDEREXECUTE "when Price is more than 500 ,you will be allowed to place ord
         ORDER.PlaceFlg = true;
 
 
+}
 
+rule UNITRESTRICT "when units is more than 10 ,you will be allowed to place order ." salience 50{
+
+	when
+	   ORDER.Units >= 10  && ORDER.UintsFlg == false
+	then 
+        ORDER.UintsFlg = true;
 		
 
 }

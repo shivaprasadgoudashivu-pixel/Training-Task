@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"keycloak-demo/config"
 	"keycloak-demo/database"
 	"keycloak-demo/handler"
 	"keycloak-demo/kafka/consumer"
@@ -26,7 +25,6 @@ var (
 	SEEDS         string
 	Topic         string
 	ConsumerGroup string
-	cfg           *config.Config
 )
 
 // var wg *sync.WaitGroup
@@ -34,7 +32,7 @@ var (
 func main() {
 
 	service := "mf-service"
-	cfg := config.Load()
+	// cfg := config.Load()
 	wg := new(sync.WaitGroup)
 	if SEEDS == "" {
 		SEEDS = "kafka1, kafka2, kafka3"
@@ -67,9 +65,11 @@ func main() {
 
 	ctx := context.Background()
 
-	msgOrderPlaced := mesagging.NewMessaging("ordersv1", strings.Split(SEEDS, ","))
+	msgOrderPlaced := mesagging.NewMessaging("orders.placed", strings.Split(SEEDS, ","))
+	msgOrderConfirmed := mesagging.NewMessaging("order.confirmed", strings.Split(SEEDS, ","))
 	go msgOrderPlaced.ProduceRecords()
-	go consumer.ConsumeTopic(db)
+	go msgOrderConfirmed.ProduceRecords()
+	go consumer.ConsumeTopic(db, msgOrderConfirmed)
 
 	app := fiber.New()
 	app.Use(cors.New(cors.Config{
@@ -82,7 +82,7 @@ func main() {
 	OR_group := app.Group("/api/v1/orders")
 	OR_group.Post("/", ODHandler.Place_order(msgOrderPlaced, rdb, ctx))
 	OR_group.Get("/:order_id", ODHandler.Get_Order_By_ID)
-	app.Post("/login", handler.LoginHandler(cfg))
+	// app.Post("/login", handler.LoginHandler(cfg))
 
 	err = app.Listen(":" + PORT)
 

@@ -6,6 +6,8 @@ import (
 	"flag"
 	"fmt"
 	"keycloak-demo/database"
+	"keycloak-demo/grool"
+	mesagging "keycloak-demo/kafka/messaging"
 	"keycloak-demo/model"
 	"time"
 
@@ -20,14 +22,17 @@ var (
 	// repo database.HOLDINGSDB
 )
 
-func ConsumeTopic(db *gorm.DB) {
+func ConsumeTopic(db *gorm.DB, msgOrderConfirmed *mesagging.Messaging) {
 
-	repo := database.NewHoldingsDB(db)
+	repoHoldings := database.NewHoldingsDB(db)
+	repoOrders := database.NewOrderDB(db)
 
-	flag.StringVar(&Topic, "topic", "ordersv1", "ordersv1")
+	flag.StringVar(&Topic, "topic", "orders.placed", "orders.placed")
 	flag.Parse()
 
 	seeds := []string{"kafka1", "kafka2", "kafka3"}
+
+	engine, dctx, kb := grool.GrlExecute()
 
 	cl, err := kgo.NewClient(
 		kgo.SeedBrokers(seeds...),
@@ -59,14 +64,25 @@ func ConsumeTopic(db *gorm.DB) {
 				return
 			}
 
-			if obj.Status == "confirmed" {
+			dctx.Add("ORDER", obj)
+			engine.Execute(dctx, kb)
+
+			if obj.PlaceFlg {
+				obj.Status = "Approved"
+			} else {
+				obj.Status = "Rejected"
+			}
+			repoOrders.UpdateOrderEvent(obj)
+			msgOrderConfirmed.ChMessaging <- obj.ToBytes()
+
+			if obj.Status == "Approved" {
 
 				fmt.Println("Here its adding the holdings")
 				holdObj := new(model.HOLDINGS)
 				holdObj.SchemeCode = obj.Scheme_code
 				holdObj.UserId = obj.UserId
 
-				repo.AddHoldings(holdObj)
+				repoHoldings.AddHoldings(holdObj)
 
 			}
 

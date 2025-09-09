@@ -25,7 +25,9 @@ const [userId, setUserId] = useState(id ?? "");
       const res = await fetch(`http://localhost:8081/api/v1/orders/${userId}`);
       if (!res.ok) throw new Error("Failed to fetch orders");
       const data: Order[] = await res.json();
+      console.log("data",data)
       setOrders(data);
+      console.log("orders : ",orders)
     } catch (err) {
       console.error("Error fetching orders:", err);
       setOrders([]);
@@ -85,8 +87,8 @@ const [userId, setUserId] = useState(id ?? "");
             {/* Table Header */}
             <div className="hidden md:grid grid-cols-10 bg-gray-100 px-6 py-3 text-sm font-medium text-gray-700 uppercase tracking-wider">
               <div className="col-span-1">ID</div>
-              <div className="col-span-1">Scheme</div>
-              <div className="col-span-1">Amount</div>
+              <div className="col-span-1">Scheme Code</div>
+              <div className="col-span-1"> &nbsp;Amount</div>
               <div className="col-span-1">Units</div>
               <div className="col-span-1">Status</div>
               <div className="col-span-2">Placed At</div>
@@ -106,31 +108,31 @@ const [userId, setUserId] = useState(id ?? "");
                   
                   {/* Scheme */}
                   <div className="md:col-span-1">
-                    <div className="text-xs text-gray-500 md:hidden">Scheme</div>
-                    <div>{order.Scheme}</div>
+                    <div className="text-xs text-gray-500 md:hidden">SchemeCode</div>
+                    <div>{order.schemeCode}</div>
                   </div>
                   
                   {/* Amount */}
                   <div className="md:col-span-1">
                     <div className="text-xs text-gray-500 md:hidden">Amount</div>
-                    <div>{order.Amount}</div>
+                    <div>{order.amount}</div>
                   </div>
                   
                   {/* Units */}
                   <div className="md:col-span-1">
                     <div className="text-xs text-gray-500 md:hidden">Units</div>
-                    <div>{order.Units}</div>
+                    <div>{order.units}</div>
                   </div>
                   
                   {/* Status */}
                   <div className="md:col-span-1">
                     <div className="text-xs text-gray-500 md:hidden">Status</div>
                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                      order.Status === 'completed' ? 'bg-green-100 text-green-800' :
-                      order.Status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                      order.status === 'completed' ? 'bg-green-100 text-green-800' :
+                      order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                       'bg-gray-100 text-gray-800'
                     }`}>
-                      {order.Status}
+                      {order.status}
                     </span>
                   </div>
                   

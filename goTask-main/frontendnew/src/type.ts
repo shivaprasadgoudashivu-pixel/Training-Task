@@ -2,9 +2,9 @@ export interface Order {
   id: number;
   userId: number;
   Scheme: string;
-  Amount: number;
-  Units: number;
-  Status: string;
+  amount: number;
+  units: number;
+  status: string;
   schemeCode: string;
   nav_used: number;
   Placed_at: number;
